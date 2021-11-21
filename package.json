@@ -1,6 +1,6 @@
 {
-  "homepage": "https://Lattecup.github.io/react-mesto-auth",
-  "name": "react-mesto-auth",
+  "homepage": "https://Lattecup.github.io/mesto-react",
+  "name": "mesto-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
