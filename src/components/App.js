@@ -153,7 +153,7 @@ function App() {
       };
       document.addEventListener('keydown', handleEscClose);
       return () => document.removeEventListener('keydown', handleEscClose);
-  });
+  }, []);
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
@@ -168,12 +168,13 @@ function App() {
     auth.register(email, password)
     .then(() => {
       setIsSuccess(true);
-      setIsInfoTooltipOpen(true);
       navigate('/sign-in');
     })
     .catch((err) => {
       console.log(err);
       setIsSuccess(false);
+    })
+    .finally(() => {
       setIsInfoTooltipOpen(true);
     });
   };
@@ -222,20 +223,18 @@ function App() {
       <Routes>
         <Route path="/sign-up" element={<Register onRegistration={handleRegistration} />} />
         <Route path="/sign-in" element={<Login onAuthorization={handleAuthorization} />} />
-        <Route path="/" element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <Main
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleConfirmDeleteClick}
-              cards={cards}
-            />
-          </ProtectedRoute>
-        } />
       </Routes>
+      <ProtectedRoute path="/" element={
+        <Main
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleConfirmDeleteClick}
+          cards={cards}
+        />}
+      />
       <Footer />
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
