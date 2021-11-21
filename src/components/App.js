@@ -224,7 +224,7 @@ function App() {
         <Route path="/sign-up" element={<Register onRegistration={handleRegistration} />} />
         <Route path="/sign-in" element={<Login onAuthorization={handleAuthorization} />} />
       </Routes>
-      <ProtectedRoute path="/" element={
+      <ProtectedRoute path="/" loggedIn={loggedIn}>
         <Main
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
@@ -233,8 +233,8 @@ function App() {
           onCardLike={handleCardLike}
           onCardDelete={handleConfirmDeleteClick}
           cards={cards}
-        />}
-      />
+        />
+      </ProtectedRoute>
       <Footer />
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
