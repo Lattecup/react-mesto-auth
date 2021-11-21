@@ -18,4 +18,4 @@ https://github.com/Lattecup/react-mesto-auth.git
 npm install    
 npm start
 ### Работа доступна по ссылке:
-https://lattecup.github.io/sign-in
+https://lattecup.github.io/react-mesto-auth
