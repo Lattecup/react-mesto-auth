@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -31,7 +31,7 @@ function App() {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [email, setEmail] = React.useState('');
-  const navigate = useNavigate();
+  const history = useHistory();
 
   React.useEffect(() => {
     api.getInitialCards()
@@ -168,7 +168,7 @@ function App() {
     auth.register(email, password)
     .then(() => {
       setIsSuccess(true);
-      navigate('/sign-in');
+      history.push('/sign-in');
     })
     .catch((err) => {
       console.log(err);
@@ -183,7 +183,7 @@ function App() {
     auth.authorize(email, password)
     .then((res) => {
       setLoggedIn(true);
-      navigate('/');
+      history.push('/');
       localStorage.setItem('token', res.token);
     })
     .catch((err) => {
@@ -200,7 +200,7 @@ function App() {
           if (res) {
             setEmail(res.data.email);
             setLoggedIn(true);
-            navigate('/');
+            history.push('/');
           };
         })
         .catch((err) => {
@@ -209,23 +209,32 @@ function App() {
       };
     };
     handleTokenCheck();
-  }, [navigate]);
+  }, [history]);
 
   function handleSignOut() {
     localStorage.removeItem('token');
-    navigate('/sign-in');
+    history.push('/sign-in');
     setLoggedIn(false);
   };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header loggedIn={loggedIn} email={email} onSignOut={handleSignOut}/>
-      <Routes>
-        <Route path="/sign-up" element={<Register onRegistration={handleRegistration} />} />
-        <Route path="/sign-in" element={<Login onAuthorization={handleAuthorization} />} />
-      </Routes>
-      <ProtectedRoute path="/" loggedIn={loggedIn}>
-        <Main
+      <Switch>
+        <Route path="/sign-up">
+          <Register
+            onRegistration={handleRegistration}
+          />
+        </Route>
+        <Route path="/sign-in">
+          <Login
+            onAuthorization={handleAuthorization}
+          />
+        </Route>
+        <ProtectedRoute
+          path="/"
+          loggedIn={loggedIn}
+          component={Main}
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
@@ -234,7 +243,7 @@ function App() {
           onCardDelete={handleConfirmDeleteClick}
           cards={cards}
         />
-      </ProtectedRoute>
+      </Switch>
       <Footer />
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
